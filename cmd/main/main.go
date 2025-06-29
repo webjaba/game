@@ -1,6 +1,8 @@
 package main
 
 import (
+	"game/internal/game/entities"
+	"game/internal/game/systems"
 	"image/color"
 	"log"
 
@@ -9,24 +11,19 @@ import (
 
 // Game реализует интерфейс ebiten.Game
 type Game struct {
-	playerX, playerY float64
+	player entities.Player
 }
 
 func (g *Game) Update() error {
-	// Движение персонажа (WASD или стрелки)
-	speed := 3.0
-	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) {
-		g.playerX -= speed
+
+	wasd := []bool{
+		ebiten.IsKeyPressed(ebiten.KeyW),
+		ebiten.IsKeyPressed(ebiten.KeyA),
+		ebiten.IsKeyPressed(ebiten.KeyS),
+		ebiten.IsKeyPressed(ebiten.KeyD),
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) {
-		g.playerX += speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowUp) {
-		g.playerY -= speed
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyArrowDown) {
-		g.playerY += speed
-	}
+	systems.MovePlayer(&g.player, wasd)
+
 	return nil
 }
 
@@ -36,7 +33,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	player.Fill(color.RGBA{R: 255, A: 255}) // Красный цвет
 
 	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(g.playerX, g.playerY)
+	op.GeoM.Translate(float64(g.player.Coords.X), float64(g.player.Coords.Y))
 	screen.DrawImage(player, op)
 }
 
