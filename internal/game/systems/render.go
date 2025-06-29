@@ -11,3 +11,7 @@ func DrawPlayer(screen *ebiten.Image, p *entities.Player) {
 	op.GeoM.Translate(float64(p.Coords.X), float64(p.Coords.Y))
 	screen.DrawImage(p.Img, op)
 }
+
+func DrawRoom(screen, r *ebiten.Image) {
+	screen.DrawImage(r, nil)
+}

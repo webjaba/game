@@ -5,6 +5,7 @@ import (
 	"game/internal/game/settings"
 	"game/internal/game/systems"
 	"game/internal/game/utils"
+	"game/internal/game/world"
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -12,8 +13,10 @@ import (
 )
 
 type Game struct {
-	player     entities.Player
-	fullscreen bool
+	player      entities.Player
+	fullscreen  bool
+	room        world.Room
+	roomTexture *ebiten.Image
 }
 
 func (g *Game) Update() error {
@@ -34,6 +37,7 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	systems.DrawRoom(screen, g.roomTexture)
 	systems.DrawPlayer(screen, &g.player)
 }
 
@@ -47,11 +51,30 @@ func SetUp() *Game {
 	i := ebiten.NewImage(64, 64)
 	i.Fill(color.RGBA{R: 255, A: 255})
 
+	// тест отрисовки комнаты
+	r := world.SetUpRoom()
+
+	staticLayer := ebiten.NewImage(10*64, 10*64)
+
+	for i, line := range r {
+		for j, tile := range line {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(float64(i*64), float64(j*64))
+			staticLayer.DrawImage(
+				world.Textures[tile],
+				op,
+			)
+		}
+	}
+	// конец теста
+
 	return &Game{
 		player: entities.Player{
 			Coords: utils.Vector{X: settings.WindowSizeX / 2, Y: settings.WindowSizeY / 2},
 			Vector: utils.Vector{},
 			Img:    i,
 		},
+		room:        r,
+		roomTexture: staticLayer,
 	}
 }
