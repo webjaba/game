@@ -8,13 +8,19 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type Game struct {
-	player entities.Player
+	player     entities.Player
+	fullscreen bool
 }
 
 func (g *Game) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyF11) {
+		g.fullscreen = !g.fullscreen
+		ebiten.SetFullscreen(g.fullscreen)
+	}
 
 	wasd := []bool{
 		ebiten.IsKeyPressed(ebiten.KeyW),
