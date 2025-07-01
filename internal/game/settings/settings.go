@@ -1,7 +1,7 @@
 package settings
 
 const (
-	PlayerSpeed = 2
+	PlayerSpeed = 5
 	WindowSizeX = 1920
 	WindowSizeY = 1080
 )

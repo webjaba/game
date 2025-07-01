@@ -2,17 +2,13 @@ package systems
 
 import (
 	"game/internal/game/entities"
+	"game/internal/game/settings"
 	"game/internal/game/utils"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
-/*
-!!!ВНИМАНИЕ!!!
-Значения координат в тесткейсах зависят от параметра settings.PlayerSpeed
-При изменении логики вычисления вектора скорости необходимо пересчитать want значения
-*/
 func TestMovePlayer(t *testing.T) {
 	t.Parallel()
 
@@ -41,7 +37,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: 0, Y: 0},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: -2},
+				Coords: utils.Vector{X: 0, Y: -settings.PlayerSpeed},
 				Vector: utils.Vector{X: 0, Y: -1},
 			},
 			wasd: []bool{true, false, false, false},
@@ -53,7 +49,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: 0, Y: 0},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: -2, Y: 0},
+				Coords: utils.Vector{X: -settings.PlayerSpeed, Y: 0},
 				Vector: utils.Vector{X: -1, Y: 0},
 			},
 			wasd: []bool{false, true, false, false},
@@ -65,7 +61,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: 0, Y: 0},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 2},
+				Coords: utils.Vector{X: 0, Y: settings.PlayerSpeed},
 				Vector: utils.Vector{X: 0, Y: 1},
 			},
 			wasd: []bool{false, false, true, false},
@@ -77,7 +73,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: 0, Y: 0},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: 2, Y: 0},
+				Coords: utils.Vector{X: settings.PlayerSpeed, Y: 0},
 				Vector: utils.Vector{X: 1, Y: 0},
 			},
 			wasd: []bool{false, false, false, true},
@@ -101,7 +97,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: 0, Y: 0},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: -2},
+				Coords: utils.Vector{X: 0, Y: -settings.PlayerSpeed},
 				Vector: utils.Vector{X: 0, Y: -1},
 			},
 			wasd: []bool{true, true, false, true},
@@ -113,7 +109,7 @@ func TestMovePlayer(t *testing.T) {
 				Vector: utils.Vector{X: -1, Y: -1},
 			},
 			want: entities.Player{
-				Coords: utils.Vector{X: 10, Y: 8},
+				Coords: utils.Vector{X: 10, Y: 10 - settings.PlayerSpeed},
 				Vector: utils.Vector{X: 0, Y: -1},
 			},
 			wasd: []bool{true, true, false, true},

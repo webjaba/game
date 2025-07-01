@@ -33,5 +33,5 @@ func MovePlayer(p *entities.Player, k []bool) {
 		utils.AddVector(&p.Vector, &Right)
 	}
 
-	utils.AddMultipliedVector(&p.Coords, &p.Vector, settings.PlayerSpeed)
+	p.Coords.AddMul(&p.Vector, settings.PlayerSpeed)
 }
