@@ -14,117 +14,71 @@ func TestMovePlayer(t *testing.T) {
 
 	tests := []struct {
 		name string
-		p    entities.Player
-		wasd []bool
-		want entities.Player
+		in   []*entities.Entity
+		want []*entities.Entity
 	}{
 		{
-			name: "no key pressed",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			wasd: []bool{false, false, false, false},
+			name: "nil",
+			in:   []*entities.Entity{{}},
+			want: []*entities.Entity{{}},
 		},
 		{
-			name: "W",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: -settings.PlayerSpeed},
-				Vector: utils.Vector{X: 0, Y: -1},
-			},
-			wasd: []bool{true, false, false, false},
+			name: "dont move",
+			in:   []*entities.Entity{mustBuildEntity(nil, nil)},
+			want: []*entities.Entity{mustBuildEntity(nil, nil)},
 		},
 		{
-			name: "A",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: -settings.PlayerSpeed, Y: 0},
-				Vector: utils.Vector{X: -1, Y: 0},
-			},
-			wasd: []bool{false, true, false, false},
+			name: "move one",
+			in:   []*entities.Entity{mustBuildEntity(nil, &utils.Vector{X: 1, Y: -1})},
+			want: []*entities.Entity{mustBuildEntity(
+				&utils.Vector{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
+				&utils.Vector{X: 1, Y: -1},
+			)},
 		},
 		{
-			name: "S",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
+			name: "move many",
+			in: []*entities.Entity{
+				mustBuildEntity(nil, &utils.Vector{X: 1, Y: -1}),
+				mustBuildEntity(&utils.Vector{X: 10, Y: 10}, &utils.Vector{X: 1, Y: -1}),
 			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: settings.PlayerSpeed},
-				Vector: utils.Vector{X: 0, Y: 1},
+			want: []*entities.Entity{
+				mustBuildEntity(
+					&utils.Vector{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
+					&utils.Vector{X: 1, Y: -1},
+				),
+				mustBuildEntity(
+					&utils.Vector{X: 10 + settings.PlayerSpeed, Y: 10 - settings.PlayerSpeed},
+					&utils.Vector{X: 1, Y: -1},
+				),
 			},
-			wasd: []bool{false, false, true, false},
-		},
-		{
-			name: "D",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: settings.PlayerSpeed, Y: 0},
-				Vector: utils.Vector{X: 1, Y: 0},
-			},
-			wasd: []bool{false, false, false, true},
-		},
-		{
-			name: "WASD",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			wasd: []bool{true, true, true, true},
-		},
-		{
-			name: "WAD",
-			p: entities.Player{
-				Coords: utils.Vector{X: 0, Y: 0},
-				Vector: utils.Vector{X: 0, Y: 0},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 0, Y: -settings.PlayerSpeed},
-				Vector: utils.Vector{X: 0, Y: -1},
-			},
-			wasd: []bool{true, true, false, true},
-		},
-		{
-			name: "WA->WAD",
-			p: entities.Player{
-				Coords: utils.Vector{X: 10, Y: 10},
-				Vector: utils.Vector{X: -1, Y: -1},
-			},
-			want: entities.Player{
-				Coords: utils.Vector{X: 10, Y: 10 - settings.PlayerSpeed},
-				Vector: utils.Vector{X: 0, Y: -1},
-			},
-			wasd: []bool{true, true, false, true},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			MovePlayer(&tt.p, tt.wasd)
+			s := &MovementSystem{}
+			s.Update(tt.in)
 
-			require.Equal(t, tt.want.Coords.X, tt.p.Coords.X, "Coords.X")
-			require.Equal(t, tt.want.Coords.Y, tt.p.Coords.Y, "Coords.Y")
-			require.Equal(t, tt.want.Vector.Y, tt.p.Vector.Y, "Vector.X")
-			require.Equal(t, tt.want.Vector.Y, tt.p.Vector.Y, "Vector.Y")
+			for i, w := range tt.want {
+				require.Equal(t, w.Position, tt.in[i].Position, "Position")
+				require.Equal(t, w.Direction, tt.in[i].Direction, "Direction")
+			}
 		})
 	}
+}
+
+func mustBuildEntity(Position, Direction *utils.Vector) *entities.Entity {
+	p := &entities.Entity{
+		Speed:     settings.PlayerSpeed,
+		Position:  &utils.Vector{X: 0, Y: 0},
+		Direction: &utils.Vector{X: 0, Y: 0},
+	}
+	if Position != nil {
+		p.Position = Position
+	}
+	if Direction != nil {
+		p.Direction = Direction
+	}
+	return p
 }

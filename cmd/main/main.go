@@ -10,7 +10,7 @@ import (
 func main() {
 	ebiten.SetWindowTitle("My Pixel Game")
 
-	g := game.SetUp()
+	g := game.New()
 
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)

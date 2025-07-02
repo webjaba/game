@@ -12,10 +12,13 @@ const (
 	StoneFloor
 )
 
-type Room [][]int8
-
 var (
 	Textures = map[int8]*ebiten.Image{
 		StoneFloor: utils.LoadTexture(settings.StoneFloorTexture),
 	}
 )
+
+type Tile struct {
+	Img    *ebiten.Image
+	Coords *utils.Vector
+}

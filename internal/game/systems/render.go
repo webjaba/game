@@ -2,16 +2,42 @@ package systems
 
 import (
 	"game/internal/game/entities"
+	"game/internal/game/settings"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func DrawPlayer(screen *ebiten.Image, p *entities.Player) {
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(float64(p.Coords.X), float64(p.Coords.Y))
-	screen.DrawImage(p.Img, op)
+type RenderSystem struct {
+	player     *entities.Entity
+	background *ebiten.Image
 }
 
-func DrawRoom(screen, r *ebiten.Image) {
-	screen.DrawImage(r, nil)
+func (s *RenderSystem) Render(screen *ebiten.Image, ents []*entities.Entity) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(
+		float64(-s.player.Position.X+settings.WindowSizeX/2-32),
+		float64(-s.player.Position.Y+settings.WindowSizeY/2-32),
+	)
+	screen.DrawImage(s.background, op)
+	for _, e := range ents {
+		if e.Image != nil && e.Position != nil {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(
+				float64(e.Position.X-s.player.Position.X+settings.WindowSizeX/2-32),
+				float64(e.Position.Y-s.player.Position.Y+settings.WindowSizeY/2-32),
+			)
+			screen.DrawImage(e.Image, op)
+		}
+	}
+}
+
+func (s *RenderSystem) UpdateBackground(b *ebiten.Image) {
+	s.background = b
+}
+
+func NewRenderSystem(p *entities.Entity, b *ebiten.Image) *RenderSystem {
+	return &RenderSystem{
+		player:     p,
+		background: b,
+	}
 }

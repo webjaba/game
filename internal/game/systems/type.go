@@ -1,6 +1,9 @@
 package systems
 
-import "game/internal/game/utils"
+import (
+	"game/internal/game/entities"
+	"game/internal/game/utils"
+)
 
 /*
 координаты отсчитываются от левой верхней точки экрана
@@ -13,3 +16,7 @@ var (
 	Left  = utils.Vector{X: -1, Y: 0}
 	Right = utils.Vector{X: 1, Y: 0}
 )
+
+type System interface {
+	Update([]*entities.Entity)
+}
