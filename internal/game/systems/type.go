@@ -11,10 +11,10 @@ import (
 пространство инвертировано по горизонтальной оси
 */
 var (
-	Up    = utils.Vector{X: 0, Y: -1}
-	Down  = utils.Vector{X: 0, Y: 1}
-	Left  = utils.Vector{X: -1, Y: 0}
-	Right = utils.Vector{X: 1, Y: 0}
+	Up    = utils.VecFloat64{X: 0, Y: -1}
+	Down  = utils.VecFloat64{X: 0, Y: 1}
+	Left  = utils.VecFloat64{X: -1, Y: 0}
+	Right = utils.VecFloat64{X: 1, Y: 0}
 )
 
 type System interface {

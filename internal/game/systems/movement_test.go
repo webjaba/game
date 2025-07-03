@@ -29,26 +29,26 @@ func TestMovePlayer(t *testing.T) {
 		},
 		{
 			name: "move one",
-			in:   []*entities.Entity{mustBuildEntity(nil, &utils.Vector{X: 1, Y: -1})},
+			in:   []*entities.Entity{mustBuildEntity(nil, &utils.VecFloat64{X: 1, Y: -1})},
 			want: []*entities.Entity{mustBuildEntity(
-				&utils.Vector{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
-				&utils.Vector{X: 1, Y: -1},
+				&utils.VecFloat64{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
+				&utils.VecFloat64{X: 1, Y: -1},
 			)},
 		},
 		{
 			name: "move many",
 			in: []*entities.Entity{
-				mustBuildEntity(nil, &utils.Vector{X: 1, Y: -1}),
-				mustBuildEntity(&utils.Vector{X: 10, Y: 10}, &utils.Vector{X: 1, Y: -1}),
+				mustBuildEntity(nil, &utils.VecFloat64{X: 1, Y: -1}),
+				mustBuildEntity(&utils.VecFloat64{X: 10, Y: 10}, &utils.VecFloat64{X: 1, Y: -1}),
 			},
 			want: []*entities.Entity{
 				mustBuildEntity(
-					&utils.Vector{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
-					&utils.Vector{X: 1, Y: -1},
+					&utils.VecFloat64{X: settings.PlayerSpeed, Y: -settings.PlayerSpeed},
+					&utils.VecFloat64{X: 1, Y: -1},
 				),
 				mustBuildEntity(
-					&utils.Vector{X: 10 + settings.PlayerSpeed, Y: 10 - settings.PlayerSpeed},
-					&utils.Vector{X: 1, Y: -1},
+					&utils.VecFloat64{X: 10 + settings.PlayerSpeed, Y: 10 - settings.PlayerSpeed},
+					&utils.VecFloat64{X: 1, Y: -1},
 				),
 			},
 		},
@@ -68,11 +68,11 @@ func TestMovePlayer(t *testing.T) {
 	}
 }
 
-func mustBuildEntity(Position, Direction *utils.Vector) *entities.Entity {
+func mustBuildEntity(Position, Direction *utils.VecFloat64) *entities.Entity {
 	p := &entities.Entity{
 		Speed:     settings.PlayerSpeed,
-		Position:  &utils.Vector{X: 0, Y: 0},
-		Direction: &utils.Vector{X: 0, Y: 0},
+		Position:  &utils.VecFloat64{X: 0, Y: 0},
+		Direction: &utils.VecFloat64{X: 0, Y: 0},
 	}
 	if Position != nil {
 		p.Position = Position

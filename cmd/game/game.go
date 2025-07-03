@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"game/internal/game/entities"
 	"game/internal/game/settings"
 	"game/internal/game/systems"
@@ -30,7 +29,6 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	fmt.Println(g.player.Direction)
 	g.renderSystem.Render(screen, g.entities)
 }
 
@@ -52,9 +50,11 @@ func New() *Game {
 		room:             r,
 		entities: []*entities.Entity{
 			p,
+			entities.NewZombie(),
 		},
 		systems: []systems.System{
 			&systems.MovementSystem{},
+			systems.NewAiSystem(p),
 		},
 	}
 }

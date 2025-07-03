@@ -1,16 +1,12 @@
 package entities
 
-import (
-	"game/internal/game/utils"
-
-	"github.com/hajimehoshi/ebiten/v2"
-)
-
 type EffectType uint8
 
 type Duration uint8
 
 type EntityType uint8
+
+type AiComponentState uint8
 
 const (
 	Burning EffectType = iota
@@ -23,11 +19,8 @@ const (
 	Zombie
 )
 
-type Entity struct {
-	Position  *utils.Vector
-	Direction *utils.Vector
-	Speed     int32 // Возможна оптимизация
-	Effects   map[EffectType]Duration
-	Image     *ebiten.Image
-	Type      EntityType
-}
+const (
+	Stopped AiComponentState = iota
+	Neutral
+	Aggressive
+)
